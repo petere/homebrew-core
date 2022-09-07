@@ -60,6 +60,7 @@ class DocbookXsl < Formula
       doc.install "doc" => "reference"
     end
 
+    chmod 0755, "#{prefix}/docbook-xsl/epub/bin/dbtoepub"
     bin.write_exec_script "#{prefix}/docbook-xsl/epub/bin/dbtoepub"
   end
 
@@ -103,5 +104,6 @@ class DocbookXsl < Formula
     system "xmlcatalog", "#{etc}/xml/catalog", "http://docbook.sourceforge.net/release/xsl/#{version}/"
     system "xmlcatalog", "#{etc}/xml/catalog", "http://docbook.sourceforge.net/release/xsl-ns/current/"
     system "xmlcatalog", "#{etc}/xml/catalog", "http://docbook.sourceforge.net/release/xsl-ns/#{version}/"
+    system bin/"dbtoepub", "--help"
   end
 end
