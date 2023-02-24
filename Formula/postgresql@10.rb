@@ -4,7 +4,7 @@ class PostgresqlAT10 < Formula
   url "https://ftp.postgresql.org/pub/source/v10.22/postgresql-10.22.tar.bz2"
   sha256 "955977555c69df1a64f44b81d4a1987eb74abbd1870579f5ad9d946133dd8e4d"
   license "PostgreSQL"
-  revision 3
+  revision 4
 
   bottle do
     sha256 arm64_ventura:  "12a23aa3da4c20fe27d7d2cf7e68a31f8072b8e5e1356e95e0918d7d528a6faa"
@@ -23,6 +23,7 @@ class PostgresqlAT10 < Formula
   deprecate! date: "2022-11-10", because: :unsupported
 
   depends_on "pkg-config" => :build
+  depends_on "gettext"
   depends_on "icu4c"
   depends_on "openssl@1.1"
   depends_on "readline"
@@ -48,6 +49,7 @@ class PostgresqlAT10 < Formula
       --libdir=#{lib}
       --sysconfdir=#{etc}
       --docdir=#{doc}
+      --enable-nls
       --enable-thread-safety
       --with-gssapi
       --with-icu

@@ -4,6 +4,7 @@ class PostgresqlAT14 < Formula
   url "https://ftp.postgresql.org/pub/source/v14.7/postgresql-14.7.tar.bz2"
   sha256 "cef60f0098fa8101c1546f4254e45b722af5431337945b37af207007630db331"
   license "PostgreSQL"
+  revision 1
 
   livecheck do
     url "https://ftp.postgresql.org/pub/source/"
@@ -24,6 +25,7 @@ class PostgresqlAT14 < Formula
   deprecate! date: "2026-11-12", because: :unsupported
 
   depends_on "pkg-config" => :build
+  depends_on "gettext"
   depends_on "icu4c"
 
   # GSSAPI provided by Kerberos.framework crashes when forked.
@@ -54,6 +56,7 @@ class PostgresqlAT14 < Formula
       --datadir=#{HOMEBREW_PREFIX}/share/#{name}
       --libdir=#{HOMEBREW_PREFIX}/lib/#{name}
       --includedir=#{HOMEBREW_PREFIX}/include/#{name}
+      --enable-nls
       --enable-thread-safety
       --with-gssapi
       --with-icu

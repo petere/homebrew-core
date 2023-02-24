@@ -4,6 +4,7 @@ class PostgresqlAT11 < Formula
   url "https://ftp.postgresql.org/pub/source/v11.19/postgresql-11.19.tar.bz2"
   sha256 "13109e2b71f1139405c27201da3733a61ace72ee1c228d9c9f0320e06aee14c2"
   license "PostgreSQL"
+  revision 1
 
   livecheck do
     url "https://ftp.postgresql.org/pub/source/"
@@ -26,6 +27,7 @@ class PostgresqlAT11 < Formula
   deprecate! date: "2023-11-09", because: :unsupported
 
   depends_on "pkg-config" => :build
+  depends_on "gettext"
   depends_on "icu4c"
   depends_on "openssl@1.1"
   depends_on "readline"
@@ -53,6 +55,7 @@ class PostgresqlAT11 < Formula
       --includedir=#{opt_include}
       --sysconfdir=#{etc}
       --docdir=#{doc}
+      --enable-nls
       --enable-thread-safety
       --with-gssapi
       --with-icu

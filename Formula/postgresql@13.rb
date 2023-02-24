@@ -4,6 +4,7 @@ class PostgresqlAT13 < Formula
   url "https://ftp.postgresql.org/pub/source/v13.10/postgresql-13.10.tar.bz2"
   sha256 "5bbcf5a56d85c44f3a8b058fb46862ff49cbc91834d07e295d02e6de3c216df2"
   license "PostgreSQL"
+  revision 1
 
   livecheck do
     url "https://ftp.postgresql.org/pub/source/"
@@ -26,6 +27,7 @@ class PostgresqlAT13 < Formula
   deprecate! date: "2025-11-13", because: :unsupported
 
   depends_on "pkg-config" => :build
+  depends_on "gettext"
   depends_on "icu4c"
 
   # GSSAPI provided by Kerberos.framework crashes when forked.
@@ -58,6 +60,7 @@ class PostgresqlAT13 < Formula
       --includedir=#{opt_include}
       --sysconfdir=#{etc}
       --docdir=#{doc}
+      --enable-nls
       --enable-thread-safety
       --with-gssapi
       --with-icu
