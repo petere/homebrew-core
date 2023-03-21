@@ -4,10 +4,11 @@ class PostgresqlAT14 < Formula
   url "https://ftp.postgresql.org/pub/source/v14.7/postgresql-14.7.tar.bz2"
   sha256 "cef60f0098fa8101c1546f4254e45b722af5431337945b37af207007630db331"
   license "PostgreSQL"
+  revision 1
 
   livecheck do
     url "https://ftp.postgresql.org/pub/source/"
-    regex(%r{href=["']?v?(14+(?:\.\d+)+)/?["' >]}i)
+    regex(%r{href=["']?v?(14(?:\.\d+)+)/?["' >]}i)
   end
 
   bottle do
@@ -19,6 +20,8 @@ class PostgresqlAT14 < Formula
     sha256 big_sur:        "af5b8ba17a1f9946396b130edd741088c0c7c7322c23891580ba3d3f0b2c026a"
     sha256 x86_64_linux:   "6853d14ffd29a1f80dafc76d88583b769f272567cb39f6a9a6c717b73d0c89ac"
   end
+
+  keg_only :versioned_formula
 
   # https://www.postgresql.org/support/versioning/
   deprecate! date: "2026-11-12", because: :unsupported
@@ -45,15 +48,18 @@ class PostgresqlAT14 < Formula
   end
 
   def install
+    ENV.delete "PKG_CONFIG_LIBDIR"
     ENV.prepend "LDFLAGS", "-L#{Formula["openssl@1.1"].opt_lib} -L#{Formula["readline"].opt_lib}"
     ENV.prepend "CPPFLAGS", "-I#{Formula["openssl@1.1"].opt_include} -I#{Formula["readline"].opt_include}"
 
     args = %W[
       --disable-debug
       --prefix=#{prefix}
-      --datadir=#{HOMEBREW_PREFIX}/share/#{name}
-      --libdir=#{HOMEBREW_PREFIX}/lib/#{name}
-      --includedir=#{HOMEBREW_PREFIX}/include/#{name}
+      --datadir=#{opt_pkgshare}
+      --libdir=#{opt_lib}
+      --includedir=#{opt_include}
+      --sysconfdir=#{etc}
+      --docdir=#{doc}
       --enable-thread-safety
       --with-gssapi
       --with-icu
@@ -79,17 +85,24 @@ class PostgresqlAT14 < Formula
     args << "PG_SYSROOT=#{MacOS.sdk_path}" if MacOS.sdk_root_needed?
 
     system "./configure", *args
-    system "make"
+
+    # Work around busted path magic in Makefile.global.in. This can't be specified
+    # in ./configure, but needs to be set here otherwise install prefixes containing
+    # the string "postgres" will get an incorrect pkglibdir.
+    # See https://github.com/Homebrew/homebrew-core/issues/62930#issuecomment-709411789
+    system "make", "pkglibdir=#{opt_lib}/postgresql",
+                   "pkgincludedir=#{opt_include}/postgresql",
+                   "includedir_server=#{opt_include}/postgresql/server"
     system "make", "install-world", "datadir=#{pkgshare}",
-                                    "libdir=#{lib}/#{name}",
-                                    "pkglibdir=#{lib}/#{name}",
-                                    "includedir=#{include}/#{name}",
-                                    "pkgincludedir=#{include}/#{name}",
-                                    "includedir_server=#{include}/#{name}/server",
-                                    "includedir_internal=#{include}/#{name}/internal"
+                                    "libdir=#{lib}",
+                                    "pkglibdir=#{lib}/postgresql",
+                                    "includedir=#{include}",
+                                    "pkgincludedir=#{include}/postgresql",
+                                    "includedir_server=#{include}/postgresql/server",
+                                    "includedir_internal=#{include}/postgresql/internal"
 
     if OS.linux?
-      inreplace lib/name/"pgxs/src/Makefile.global",
+      inreplace lib/"postgresql/pgxs/src/Makefile.global",
                 "LD = #{HOMEBREW_PREFIX}/Homebrew/Library/Homebrew/shims/linux/super/ld",
                 "LD = #{HOMEBREW_PREFIX}/bin/ld"
     end
@@ -106,11 +119,7 @@ class PostgresqlAT14 < Formula
   end
 
   def postgresql_datadir
-    if old_postgres_data_dir.exist?
-      old_postgres_data_dir
-    else
-      var/name
-    end
+    var/name
   end
 
   def postgresql_log_path
@@ -144,7 +153,7 @@ class PostgresqlAT14 < Formula
         Previous versions of postgresql shared the same data directory.
 
         You can migrate to a versioned data directory by running:
-          mv -v "#{old_postgres_data_dir}" "#{var/name}"
+          mv -v "#{old_postgres_data_dir}" "#{postgresql_datadir}"
 
         (Make sure PostgreSQL is stopped before executing this command)
 
@@ -170,10 +179,11 @@ class PostgresqlAT14 < Formula
   end
 
   test do
-    system bin/"initdb", testpath/"test" unless ENV["HOMEBREW_GITHUB_ACTIONS"]
-    assert_equal "#{HOMEBREW_PREFIX}/share/#{name}", shell_output("#{bin}/pg_config --sharedir").chomp
-    assert_equal "#{HOMEBREW_PREFIX}/lib/#{name}", shell_output("#{bin}/pg_config --libdir").chomp
-    assert_equal "#{HOMEBREW_PREFIX}/lib/#{name}", shell_output("#{bin}/pg_config --pkglibdir").chomp
-    assert_equal "#{HOMEBREW_PREFIX}/include/#{name}", shell_output("#{bin}/pg_config --includedir").chomp
+    system "#{bin}/initdb", testpath/"test" unless ENV["HOMEBREW_GITHUB_ACTIONS"]
+    assert_equal opt_pkgshare.to_s, shell_output("#{bin}/pg_config --sharedir").chomp
+    assert_equal opt_lib.to_s, shell_output("#{bin}/pg_config --libdir").chomp
+    assert_equal (opt_lib/"postgresql").to_s, shell_output("#{bin}/pg_config --pkglibdir").chomp
+    assert_equal (opt_include/"postgresql").to_s, shell_output("#{bin}/pg_config --pkgincludedir").chomp
+    assert_equal (opt_include/"postgresql/server").to_s, shell_output("#{bin}/pg_config --includedir-server").chomp
   end
 end
