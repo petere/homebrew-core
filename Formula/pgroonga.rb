@@ -4,6 +4,7 @@ class Pgroonga < Formula
   url "https://packages.groonga.org/source/pgroonga/pgroonga-2.4.4.tar.gz"
   sha256 "e5b29bfa4a2321a0ccc14b55d5156c3cb5cc03c08f7ec2d54ccc2212186292a4"
   license "PostgreSQL"
+  revision 1
 
   livecheck do
     url "https://packages.groonga.org/source/pgroonga/"

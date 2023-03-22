@@ -4,6 +4,7 @@ class PgCron < Formula
   url "https://github.com/citusdata/pg_cron/archive/refs/tags/v1.5.1.tar.gz"
   sha256 "45bb16481b7baab5d21dfa399b7bfa903dd334ff45a644ae81506a1ec0be0188"
   license "PostgreSQL"
+  revision 1
 
   bottle do
     sha256 cellar: :any,                 arm64_ventura:  "477d1eb67829094fc7f1e1841fe2879ff95587dea1ac17ed1cb398309eecf9ae"

@@ -4,6 +4,7 @@ class Pgvector < Formula
   url "https://github.com/pgvector/pgvector/archive/v0.4.1.tar.gz"
   sha256 "12dc08c33165a2f14d97d1c153d6ec3dc0c8d1b8c53ac3ba8b44517e8795444c"
   license "PostgreSQL"
+  revision 1
 
   bottle do
     sha256 cellar: :any_skip_relocation, arm64_ventura:  "57b81bfc6d79372eba894ea7c70b9b05a91f533aeb5c2abfcf3fec3e2b6e4bed"

@@ -6,6 +6,7 @@ class Postgraphile < Formula
   url "https://registry.npmjs.org/postgraphile/-/postgraphile-4.13.0.tgz"
   sha256 "bdf6c3047b16fd7bddc2eabd74939b986bc2fa0f56383f409fa3d7d95418cf77"
   license "MIT"
+  revision 1
   head "https://github.com/graphile/postgraphile.git", branch: "main"
 
   bottle do

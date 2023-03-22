@@ -4,6 +4,7 @@ class Wal2json < Formula
   url "https://github.com/eulerto/wal2json/archive/wal2json_2_5.tar.gz"
   sha256 "b516653575541cf221b99cf3f8be9b6821f6dbcfc125675c85f35090f824f00e"
   license "BSD-3-Clause"
+  revision 1
 
   livecheck do
     url :stable

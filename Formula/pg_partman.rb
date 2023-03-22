@@ -4,6 +4,7 @@ class PgPartman < Formula
   url "https://github.com/pgpartman/pg_partman/archive/refs/tags/v4.7.2.tar.gz"
   sha256 "8ca9cf2a56bde591b0d0526cf5db54a2c9691fcfa514eebb419f8c394eb9d17a"
   license "PostgreSQL"
+  revision 1
 
   bottle do
     sha256 cellar: :any_skip_relocation, arm64_ventura:  "973279863324b0d0641e18b884ba6a44ec88c96f560e60342695a75a96ffbe32"

@@ -4,6 +4,7 @@ class Citus < Formula
   url "https://github.com/citusdata/citus/archive/v11.2.0.tar.gz"
   sha256 "a23c56015b1a7fda5bef0102fce81adcf75a8ab75c4f53760795b6a64e951761"
   license "AGPL-3.0-only"
+  revision 1
   head "https://github.com/citusdata/citus.git", branch: "main"
 
   bottle do
