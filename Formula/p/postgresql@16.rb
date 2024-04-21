@@ -21,6 +21,13 @@ class PostgresqlAT16 < Formula
     sha256 x86_64_linux:   "4655a82d8c2e9503f55bb453d71b28e313f81e78908670b19b8e741060ed02f4"
   end
 
+  head do
+    url "https://git.postgresql.org/git/postgresql.git", branch: "REL_16_STABLE"
+
+    depends_on "docbook" => :build
+    depends_on "docbook-xsl" => :build
+  end
+
   keg_only :versioned_formula
 
   # https://www.postgresql.org/support/versioning/
@@ -57,6 +64,8 @@ class PostgresqlAT16 < Formula
     # Fix 'libintl.h' file not found for extensions
     ENV.prepend "LDFLAGS", "-L#{Formula["gettext"].opt_lib}"
     ENV.prepend "CPPFLAGS", "-I#{Formula["gettext"].opt_include}"
+
+    ENV["XML_CATALOG_FILES"] = "#{etc}/xml/catalog" if build.head?
 
     args = std_configure_args + %W[
       --datadir=#{opt_pkgshare}

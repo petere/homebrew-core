@@ -2,5 +2,6 @@
   "bash-completion@2",
   "botan@2",
   "imagemagick@6",
-  "mbedtls@2"
+  "mbedtls@2",
+  "postgresql@16"
 ]
