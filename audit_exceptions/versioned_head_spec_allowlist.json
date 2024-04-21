@@ -3,6 +3,7 @@
   "botan@2",
   "imagemagick@6",
   "mbedtls@2",
+  "postgresql@12",
   "postgresql@13",
   "postgresql@14",
   "postgresql@15",

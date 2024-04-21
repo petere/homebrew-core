@@ -21,6 +21,13 @@ class PostgresqlAT12 < Formula
     sha256 x86_64_linux:   "44721ad3cd772e7a15d8179af6a12f9b53df14bc831ea0ec3180213eb36fff9a"
   end
 
+  head do
+    url "https://git.postgresql.org/git/postgresql.git", branch: "REL_12_STABLE"
+
+    depends_on "docbook" => :build
+    depends_on "docbook-xsl" => :build
+  end
+
   keg_only :versioned_formula
 
   # https://www.postgresql.org/support/versioning/
@@ -50,6 +57,8 @@ class PostgresqlAT12 < Formula
     ENV.delete "PKG_CONFIG_LIBDIR" if OS.mac? && MacOS.version == :catalina
     ENV.prepend "LDFLAGS", "-L#{Formula["openssl@3"].opt_lib} -L#{Formula["readline"].opt_lib}"
     ENV.prepend "CPPFLAGS", "-I#{Formula["openssl@3"].opt_include} -I#{Formula["readline"].opt_include}"
+
+    ENV["XML_CATALOG_FILES"] = "#{etc}/xml/catalog" if build.head?
 
     args = %W[
       --disable-debug
