@@ -21,6 +21,13 @@ class PostgresqlAT14 < Formula
     sha256 x86_64_linux:   "9298be8e141b22173e5e1892a7b370ca09238656dabece13dd57575ae0dfd26a"
   end
 
+  head do
+    url "https://git.postgresql.org/git/postgresql.git", branch: "REL_14_STABLE"
+
+    depends_on "docbook" => :build
+    depends_on "docbook-xsl" => :build
+  end
+
   # https://www.postgresql.org/support/versioning/
   deprecate! date: "2026-11-12", because: :unsupported
 
@@ -48,6 +55,8 @@ class PostgresqlAT14 < Formula
   def install
     ENV.prepend "LDFLAGS", "-L#{Formula["openssl@3"].opt_lib} -L#{Formula["readline"].opt_lib}"
     ENV.prepend "CPPFLAGS", "-I#{Formula["openssl@3"].opt_include} -I#{Formula["readline"].opt_include}"
+
+    ENV["XML_CATALOG_FILES"] = "#{etc}/xml/catalog" if build.head?
 
     args = %W[
       --disable-debug
